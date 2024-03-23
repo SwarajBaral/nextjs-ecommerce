@@ -2,7 +2,6 @@
 
 import { Prisma } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "~/server/db";
 

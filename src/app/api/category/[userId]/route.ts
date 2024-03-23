@@ -1,5 +1,4 @@
 import { Category, UserCategoryLink } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { db } from "~/server/db";
 
@@ -8,7 +7,7 @@ type ResponseData = {
 };
 
 export const GET = async (
-  req: NextApiRequest,
+  req: Request,
   { params }: { params: { userId: string } },
 ): Promise<NextResponse<ResponseData>> => {
   const userId = params.userId;

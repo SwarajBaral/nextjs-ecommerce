@@ -1,5 +1,4 @@
 import { Category } from "@prisma/client";
-import type { NextApiRequest, NextApiResponse } from "next";
 import { NextResponse } from "next/server";
 import { db } from "~/server/db";
 
@@ -8,7 +7,7 @@ type ResponseData = {
 };
 
 export const GET = async (
-  req: NextApiRequest,
+  req: Request,
 ): Promise<NextResponse<ResponseData>> => {
   const allCats = await db.category.findMany();
   return NextResponse.json({ message: allCats }, { status: 200 });
