@@ -18,3 +18,31 @@ model Post {
 
     @@index([name])
 }
+
+model User {
+  id             String       @id @default(uuid())
+  createdAt      DateTime     @default(now())
+  emailId        String       @unique
+  fname          String
+  lname          String
+  password       String
+  emailConfirmed Boolean      @default(false)
+  isBlocked      Boolean      @default(false)
+  passRetries    Int          @default(0)
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserCategoryLink {
+  id        String      @id @default(uuid())
+  userId    String
+  categoryList Int[]    @default([])
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  @@unique([userId])
+}
