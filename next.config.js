@@ -16,6 +16,11 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  env: {
+    DATABASE_URL: process.env.DATABASE_URL,
+    SESSION_KEY: process.env.SESSION_KEY,
+    SALT_ROUNDS: process.env.SALT_ROUNDS,
+  },
 };
 
 export default config;
