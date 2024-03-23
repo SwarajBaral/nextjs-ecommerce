@@ -14,7 +14,7 @@ const PAGE_SIZE = 6;
 export const InterestClient = (props: Props) => {
   const [currPage, setCurrPage] = useState<number>(1);
   const [selectedIds, setSelectedIds] = useState<Array<number>>(
-    props.userInterests.map((ui) => ui.categoryId),
+    props.userInterests[0]?.categoryList || [],
   );
   const [popup, setPopup] = useState<{
     message: string;
@@ -84,7 +84,8 @@ export const InterestClient = (props: Props) => {
               Please mark your interests
             </h2>
             <sub className="w-full text-center">
-              We will notify you based on your selections
+              We will notify you based on your selections. You currently have{" "}
+              {props.userInterests[0]?.categoryList.length || 0} interests.
             </sub>
           </div>
           <div className="grid grid-cols-1 gap-4">

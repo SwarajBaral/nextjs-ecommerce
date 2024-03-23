@@ -7,18 +7,13 @@ export const POST = async (
 ) => {
   try {
     const data: { categories: Array<number> } = await req.json();
-    var dbSaveObj: any[] = [];
     const userId = params.id;
-    for (const catId of data.categories) {
-      dbSaveObj.push({
-        categoryId: catId,
-        userId: userId,
-      });
-    }
-    const savedInterests = await db.userCategoryLink.createMany({
-      data: dbSaveObj,
+    const savedInterests = await db.userCategoryLink.upsert({
+      create: { userId: userId, categoryList: data.categories },
+      update: { categoryList: data.categories },
+      where: { userId: userId },
     });
-    console.log(savedInterests);
+    console.log("🚀 ~ savedInterests:", savedInterests)
     return NextResponse.json(
       { message: "Interests saved successfully" },
       { status: 200 },

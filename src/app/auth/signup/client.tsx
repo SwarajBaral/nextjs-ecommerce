@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import React, { FormEvent, useState } from "react";
 import Popup from "~/components/popup";
@@ -23,7 +24,7 @@ const SignupClient = (props: Props) => {
     }
 
     const jsonData = JSON.stringify(jsonObject);
-    const apiRes = await fetch("/api/auth/create", {
+    const apiRes = await fetch("/api/user/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +35,7 @@ const SignupClient = (props: Props) => {
     const data = await apiRes.json();
     setPopup({
       message: data.message,
-      type: apiRes.status === 500 ? "error" : "success",
+      type: [400, 500].includes(apiRes.status) ? "error" : "success",
     });
   };
   return (
@@ -121,7 +122,7 @@ const SignupClient = (props: Props) => {
               <span className="w-full rounded-md px-3 py-2">
                 Got an account ?{" "}
                 <Link
-                  href={"/auth_new/login"}
+                  href={"/auth/login"}
                   className="font-medium text-blue-600 hover:underline dark:text-blue-500"
                 >
                   Login

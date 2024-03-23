@@ -42,7 +42,7 @@ const LoginClient = (props: Props) => {
             <span className="w-full rounded-md px-3">
               Don't have an account ?{" "}
               <Link
-                href={"/auth_new/signup"}
+                href={"/auth/signup"}
                 className="font-medium text-blue-600 hover:underline dark:text-blue-500"
               >
                 Signup
