@@ -5,7 +5,7 @@ import { getSession } from "lib";
 import { redirect } from "next/navigation";
 
 const getData = async (): Promise<Category[]> => {
-  const res = await fetch("http://localhost:3001/api/category/all");
+  const res = await fetch("/api/category/all");
   const data = (await res.json()) as { message: Category[] };
   return data.message;
 };
@@ -13,7 +13,7 @@ const getData = async (): Promise<Category[]> => {
 const getUserInterests = async (
   userId: string,
 ): Promise<UserCategoryLink[]> => {
-  const res = await fetch(`http://localhost:3001/api/category/${userId}`);
+  const res = await fetch(`/api/category/${userId}`);
   const data = (await res.json()) as { categories: UserCategoryLink[] };
   return data.categories;
 };
