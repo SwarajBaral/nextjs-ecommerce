@@ -5,10 +5,10 @@ import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "~/server/db";
 
-const saltRounds = Number(process.env.SALT_ROUNDS || 10);
+const saltRounds = Number(process.env.SALT_ROUNDS ?? 10);
 
 export const POST = async (req: NextRequest) => {
-  const data = await req.json();
+  const data = await req.json() as {email: string, fname: string, lname: string, password: string};
 
   const { fname, lname, email, password } = data;
 

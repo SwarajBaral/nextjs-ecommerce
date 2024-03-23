@@ -2,7 +2,7 @@
 import React from "react";
 
 type Props = {
-  logout: Function;
+  logout: () => Promise<void>;
 };
 
 const Logout = async (props: Props) => {

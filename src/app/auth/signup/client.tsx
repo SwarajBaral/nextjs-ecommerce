@@ -3,9 +3,7 @@ import Link from "next/link";
 import React, { FormEvent, useState } from "react";
 import Popup from "~/components/popup";
 
-type Props = {};
-
-const SignupClient = (props: Props) => {
+const SignupClient = () => {
   const [popup, setPopup] = useState<{
     message: string;
     type: "error" | "success" | "info";
@@ -17,7 +15,7 @@ const SignupClient = (props: Props) => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const jsonObject: Record<string, any> = {};
+    const jsonObject: Record<string, unknown> = {};
 
     for (const [key, value] of formData.entries()) {
       jsonObject[key] = value;
@@ -32,7 +30,7 @@ const SignupClient = (props: Props) => {
       },
       body: jsonData,
     });
-    const data = await apiRes.json();
+    const data = (await apiRes.json()) as { message: string };
     setPopup({
       message: data.message,
       type: [400, 500].includes(apiRes.status) ? "error" : "success",

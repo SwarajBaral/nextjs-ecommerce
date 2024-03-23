@@ -14,7 +14,7 @@ const PAGE_SIZE = 6;
 export const InterestClient = (props: Props) => {
   const [currPage, setCurrPage] = useState<number>(1);
   const [selectedIds, setSelectedIds] = useState<Array<number>>(
-    props.userInterests[0]?.categoryList || [],
+    props.userInterests[0]?.categoryList ?? [],
   );
   const [popup, setPopup] = useState<{
     message: string;
@@ -85,31 +85,32 @@ export const InterestClient = (props: Props) => {
             </h2>
             <sub className="w-full text-center">
               We will notify you based on your selections. You currently have{" "}
-              {props.userInterests[0]?.categoryList.length || 0} interests.
+              {props.userInterests[0]?.categoryList.length ?? 0} interests.
             </sub>
           </div>
           <div className="grid grid-cols-1 gap-4">
-            {allCategories &&
-              allCategories
-                .slice(6 * (currPage - 1), 6 * currPage)
-                .map((category) => {
-                  return (
-                    <div key={"uniquekey" + category.id}>
-                      <input
-                        type="checkbox"
-                        onClick={() => handleSelection(category.id)}
-                        id={"interest" + category.id}
-                        name={"interest" + category.id}
-                        className="mr-2 cursor-pointer appearance-none border-slate-800 bg-slate-300 text-black focus:ring-slate-200"
-                        checked={selectedIds.includes(category.id)}
-                        defaultChecked
-                      />
-                      <label htmlFor={"interest" + category.id}>
-                        {category.name}
-                      </label>
-                    </div>
-                  );
-                })}
+            {allCategories
+              ? allCategories
+                  .slice(6 * (currPage - 1), 6 * currPage)
+                  .map((category) => {
+                    return (
+                      <div key={"uniquekey" + category.id}>
+                        <input
+                          type="checkbox"
+                          onClick={() => handleSelection(category.id)}
+                          id={"interest" + category.id}
+                          name={"interest" + category.id}
+                          className="mr-2 cursor-pointer appearance-none border-slate-800 bg-slate-300 text-black focus:ring-slate-200"
+                          checked={selectedIds.includes(category.id)}
+                          defaultChecked
+                        />
+                        <label htmlFor={"interest" + category.id}>
+                          {category.name}
+                        </label>
+                      </div>
+                    );
+                  })
+              : null}
           </div>
           <p className="mt-4 text-sm text-gray-500">
             You can select a maximum of 4 interests.

@@ -6,7 +6,7 @@ export const POST = async (
   { params }: { params: { id: string } },
 ) => {
   try {
-    const data: { categories: Array<number> } = await req.json();
+    const data = await req.json() as { categories: Array<number> };
     const userId = params.id;
     const savedInterests = await db.userCategoryLink.upsert({
       create: { userId: userId, categoryList: data.categories },

@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 
 type Props = {
-  login: Function;
+  login: (formData: FormData) => void;
 };
 
 const LoginClient = (props: Props) => {
@@ -40,7 +40,7 @@ const LoginClient = (props: Props) => {
           </div>
           <div className="center mb-2 text-center">
             <span className="w-full rounded-md px-3">
-              Don't have an account ?{" "}
+              Don&apos;t have an account ?
               <Link
                 href={"/auth/signup"}
                 className="font-medium text-blue-600 hover:underline dark:text-blue-500"
