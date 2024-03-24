@@ -30,7 +30,6 @@ const Interests = async () => {
   }
 
   const categories = await getData();
-  console.log("🚀 ~ Interests ~ categories:", categories);
   const userCats = await getUserInterests(session.user.id);
 
   return (

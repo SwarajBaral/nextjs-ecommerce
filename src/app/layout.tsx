@@ -1,5 +1,6 @@
 import { getSession, logout } from "lib";
 import { Inter } from "next/font/google";
+import Link from "next/link";
 import Logout from "~/components/logout";
 import "~/styles/globals.css";
 
@@ -25,7 +26,21 @@ export default async function RootLayout({
         <header
           className={`font-sans ${inter.variable} bg-white p-4 text-center`}
         >
-          THIS IS A HEADER {session && <Logout logout={logout} />}
+          <ul className="flex w-full">
+            <li className="mr-6">
+              <Link className="text-blue-500 hover:text-blue-800" href={"/"}>
+                Home
+              </Link>
+            </li>
+            <li className="mr-6">
+              <a className="text-blue-500 hover:text-blue-800" href="#">
+                {session && <Logout logout={logout} />}
+              </a>
+            </li>
+            <li className="mr-6">
+              {session ? `Hi ${session.user.name}` : null}
+            </li>
+          </ul>
         </header>
         {children}
       </body>

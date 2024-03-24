@@ -1,6 +1,7 @@
 "use client";
 import { Category, UserCategoryLink } from "@prisma/client";
 import React, { useState } from "react";
+import Loader from "~/components/loader";
 import Popup from "~/components/popup";
 
 type Props = {
@@ -16,6 +17,7 @@ export const InterestClient = (props: Props) => {
   const [selectedIds, setSelectedIds] = useState<Array<number>>(
     props.userInterests[0]?.categoryList ?? [],
   );
+  const [btnDisabled, setBtnDisabled] = useState<boolean>(false);
   const [popup, setPopup] = useState<{
     message: string;
     type: "error" | "success" | "info";
@@ -48,6 +50,7 @@ export const InterestClient = (props: Props) => {
     }
   };
   const handleSubmit = async () => {
+    setBtnDisabled(true);
     if (selectedIds.length < 1) {
       setPopup({
         message: "Please select one or nore interests to save",
@@ -65,7 +68,8 @@ export const InterestClient = (props: Props) => {
       },
       body: JSON.stringify(jsonObject),
     });
-    console.log(apiRes);
+    setBtnDisabled(false);
+    setPopup({ message: "Interests saved successfully", type: "success" });
   };
 
   return (
@@ -133,7 +137,10 @@ export const InterestClient = (props: Props) => {
             </button>
           </div>
           <div className="mt-8 flex items-center justify-center rounded-md bg-green-600 p-2 text-white hover:bg-green-700">
-            <button onClick={handleSubmit}>Save my interests</button>
+            {btnDisabled ? <Loader /> : null}
+            <button onClick={handleSubmit} disabled={btnDisabled}>
+              Save my interests
+            </button>
           </div>
         </div>
       </div>

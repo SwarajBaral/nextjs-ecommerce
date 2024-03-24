@@ -2,12 +2,14 @@
 import Link from "next/link";
 import React, { FormEvent, useState } from "react";
 import Popup from "~/components/popup";
+import { loginAction, navigateAction } from "../auth-actions";
 
 const SignupClient = () => {
   const [popup, setPopup] = useState<{
     message: string;
     type: "error" | "success" | "info";
   } | null>(null);
+  const [showPass, setShowPass] = useState<boolean>(false);
 
   const handleClosePopup = () => {
     setPopup(null);
@@ -15,6 +17,24 @@ const SignupClient = () => {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    const pass1 = String(formData.get("password"));
+    const pass2 = String(formData.get("confirm_password"));
+    if (pass1 !== pass2) {
+      setPopup({ message: "Passwords dont match", type: "error" });
+      return;
+    }
+    if (
+      !pass1.match(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$/gm,
+      )
+    ) {
+      setPopup({
+        message:
+          "Password should be at least 8 chars long with at least 1 special char, 1 number and 1 uppercase char",
+        type: "error",
+      });
+      return;
+    }
     const jsonObject: Record<string, unknown> = {};
 
     for (const [key, value] of formData.entries()) {
@@ -35,6 +55,10 @@ const SignupClient = () => {
       message: data.message,
       type: [400, 500].includes(apiRes.status) ? "error" : "success",
     });
+    if (apiRes.status === 200) {
+      await navigateAction("/auth/otp");
+      await loginAction(formData);
+    }
   };
   return (
     <>
@@ -62,6 +86,7 @@ const SignupClient = () => {
                   name="fname"
                   className="w-full rounded-md border border-[#c3c3c3] px-3 py-2 focus:border-blue-500 focus:outline-none"
                   placeholder="Enter your first name"
+                  required
                 />
               </div>
               <div>
@@ -87,6 +112,7 @@ const SignupClient = () => {
                 name="email"
                 className="w-full rounded-md border border-[#c3c3c3] px-3 py-2 focus:border-blue-500 focus:outline-none"
                 placeholder="Enter your email"
+                required
               />
             </div>
             <div className="mb-4">
@@ -94,12 +120,20 @@ const SignupClient = () => {
                 Password
               </label>
               <input
-                type="password"
+                type={showPass ? "text" : "password"}
                 id="password"
                 name="password"
                 className="w-full rounded-md border border-[#c3c3c3] px-3 py-2 focus:border-blue-500 focus:outline-none"
                 placeholder="Enter your password"
+                required
               />
+              <button
+                type="button"
+                className="mt-2 rounded border-t-neutral-700 bg-blue-400 p-2 text-sm text-white shadow-md"
+                onClick={() => setShowPass(!showPass)}
+              >
+                Show pass
+              </button>
             </div>
             <div className="mb-6">
               <label
@@ -114,6 +148,7 @@ const SignupClient = () => {
                 name="confirm_password"
                 className="w-full rounded-md border border-[#c3c3c3] px-3 py-2 focus:border-blue-500 focus:outline-none"
                 placeholder="Confirm your password"
+                required
               />
             </div>
             <div className="center mb-6 text-center">

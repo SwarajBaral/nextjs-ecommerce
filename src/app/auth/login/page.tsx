@@ -13,13 +13,9 @@ const Login = async () => {
   if (session) {
     redirect("/onboarding/interests");
   }
-  const loginAction = async (formData: FormData) => {
-    "use server";
-    await login(formData);
-  };
   return (
     <>
-      <LoginClient login={loginAction} />
+      <LoginClient />
     </>
   );
 };
