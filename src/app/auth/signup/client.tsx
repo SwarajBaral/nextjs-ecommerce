@@ -174,7 +174,7 @@ const SignupClient = () => {
                 disabled={btnDisabled}
                 className="flex w-full items-center justify-center rounded-md bg-green-900 px-4 py-2 text-white hover:bg-slate-700 focus:bg-slate-700 focus:outline-none"
               >
-                {true ? <Loader /> : null}
+                {btnDisabled ? <Loader /> : null}
                 <span className="mx-2">Sign up</span>
               </button>
             </div>
