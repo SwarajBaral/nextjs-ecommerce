@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import Loader from "~/components/loader";
 import Popup from "~/components/popup";
 import { loginAction } from "../auth-actions";
+import { useFormStatus } from "react-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginClient = () => {
   const [error, setError] = useState<{
@@ -11,16 +13,18 @@ const LoginClient = () => {
     type: "error" | "info" | "success";
   } | null>();
   const [btnDisabled, setBtnDisabled] = useState<boolean>(false);
+  const [showPass, setShowPass] = useState<boolean>(false);
   const formAction = async (formData: FormData) => {
-    setBtnDisabled(true);
     const pass = String(formData.get("password"));
     if (pass.length < 8) {
       setError({
         message: "Password should be at least 8 chars long",
         type: "error",
       });
+      setBtnDisabled(false);
       return;
     }
+    setBtnDisabled(true);
     const loginRes = await loginAction(formData);
     if (loginRes.type === "error") {
       setError({ message: loginRes.message, type: "error" });
@@ -60,14 +64,23 @@ const LoginClient = () => {
               <label htmlFor="password" className="mb-2 block text-gray-700">
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                className="w-full rounded-md border border-[#c3c3c3] px-3 py-2 focus:border-blue-500 focus:outline-none"
-                required
-                placeholder="Enter your password"
-              />
+              <div className="flex items-center justify-center gap-2">
+                <input
+                  type={showPass ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  className="w-full rounded-md border border-[#c3c3c3] px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  min={8}
+                  required
+                  placeholder="Enter your password"
+                />
+                <div
+                  className="cursor-pointer rounded border-t-neutral-700 bg-blue-400 p-2 text-sm text-white shadow-md hover:bg-blue-300"
+                  onClick={() => setShowPass(!showPass)}
+                >
+                  {showPass ? <FaEye /> : <FaEyeSlash />}
+                </div>
+              </div>
             </div>
             <div className="center mb-2 text-center">
               <span className="w-full rounded-md px-3">
@@ -84,10 +97,10 @@ const LoginClient = () => {
               <button
                 type="submit"
                 disabled={btnDisabled}
-                className="w-full rounded-md bg-green-900 px-4 py-2 text-white hover:bg-slate-700 focus:bg-slate-700 focus:outline-none"
+                className="flex w-full items-center justify-center rounded-md bg-green-900 px-4 py-2 text-white hover:bg-slate-700 focus:bg-slate-700 focus:outline-none"
               >
                 {btnDisabled ? <Loader /> : null}
-                LOGIN
+                <span className="mx-2">LOGIN</span>
               </button>
             </div>
             <div className="mt-2 text-center">

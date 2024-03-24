@@ -1,3 +1,4 @@
+import { getSession } from "lib";
 import { NextResponse } from "next/server";
 import { db } from "~/server/db";
 
@@ -5,6 +6,13 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } },
 ) {
+  const session = await getSession();
+  if(!session?.user)
+  {
+    return NextResponse.json({
+      message: "Unauthorized access"
+    }, {status: 401})
+  }
   const userId = params.id;
   const user = await db.user.findUnique({ where: { id: userId } });
   if (!user) {

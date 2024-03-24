@@ -3,6 +3,8 @@ import Link from "next/link";
 import React, { FormEvent, useState } from "react";
 import Popup from "~/components/popup";
 import { loginAction, navigateAction } from "../auth-actions";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Loader from "~/components/loader";
 
 const SignupClient = () => {
   const [popup, setPopup] = useState<{
@@ -10,6 +12,7 @@ const SignupClient = () => {
     type: "error" | "success" | "info";
   } | null>(null);
   const [showPass, setShowPass] = useState<boolean>(false);
+  const [btnDisabled, setBtnDisabled] = useState<boolean>(false);
 
   const handleClosePopup = () => {
     setPopup(null);
@@ -35,6 +38,7 @@ const SignupClient = () => {
       });
       return;
     }
+    setBtnDisabled(true);
     const jsonObject: Record<string, unknown> = {};
 
     for (const [key, value] of formData.entries()) {
@@ -56,8 +60,8 @@ const SignupClient = () => {
       type: [400, 500].includes(apiRes.status) ? "error" : "success",
     });
     if (apiRes.status === 200) {
+      setBtnDisabled(false);
       await navigateAction("/auth/otp");
-      await loginAction(formData);
     }
   };
   return (
@@ -119,21 +123,23 @@ const SignupClient = () => {
               <label htmlFor="password" className="mb-2 block text-gray-700">
                 Password
               </label>
-              <input
-                type={showPass ? "text" : "password"}
-                id="password"
-                name="password"
-                className="w-full rounded-md border border-[#c3c3c3] px-3 py-2 focus:border-blue-500 focus:outline-none"
-                placeholder="Enter your password"
-                required
-              />
-              <button
-                type="button"
-                className="mt-2 rounded border-t-neutral-700 bg-blue-400 p-2 text-sm text-white shadow-md"
-                onClick={() => setShowPass(!showPass)}
-              >
-                Show pass
-              </button>
+              <div className="flex items-center justify-center gap-2">
+                <input
+                  type={showPass ? "text" : "password"}
+                  id="password"
+                  name="password"
+                  className="w-full rounded-md border border-[#c3c3c3] px-3 py-2 focus:border-blue-500 focus:outline-none"
+                  min={8}
+                  required
+                  placeholder="Enter your password"
+                />
+                <div
+                  className="cursor-pointer rounded border-t-neutral-700 bg-blue-400 p-2 text-sm text-white shadow-md hover:bg-blue-300"
+                  onClick={() => setShowPass(!showPass)}
+                >
+                  {showPass ? <FaEye /> : <FaEyeSlash />}
+                </div>
+              </div>
             </div>
             <div className="mb-6">
               <label
@@ -162,12 +168,16 @@ const SignupClient = () => {
                 </Link>
               </span>
             </div>
-            <button
-              type="submit"
-              className="w-full rounded-md bg-slate-900 px-4 py-2 text-white hover:bg-slate-700 focus:bg-slate-700 focus:outline-none"
-            >
-              CREATE ACCOUNT
-            </button>
+            <div>
+              <button
+                type="submit"
+                disabled={btnDisabled}
+                className="flex w-full items-center justify-center rounded-md bg-green-900 px-4 py-2 text-white hover:bg-slate-700 focus:bg-slate-700 focus:outline-none"
+              >
+                {true ? <Loader /> : null}
+                <span className="mx-2">Sign up</span>
+              </button>
+            </div>
           </form>
         </div>
       </div>

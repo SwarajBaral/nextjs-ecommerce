@@ -1,3 +1,4 @@
+import { getSession } from "lib";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "~/server/db";
 
@@ -6,14 +7,20 @@ export const POST = async (
   { params }: { params: { id: string } },
 ) => {
   try {
+    const session = await getSession();
+    if(!session?.user)
+    {
+      return NextResponse.json({
+        message: "Unauthorized access"
+      }, {status: 401})
+    }
     const data = await req.json() as { categories: Array<number> };
     const userId = params.id;
-    const savedInterests = await db.userCategoryLink.upsert({
+    await db.userCategoryLink.upsert({
       create: { userId: userId, categoryList: data.categories },
       update: { categoryList: data.categories },
       where: { userId: userId },
     });
-    console.log("🚀 ~ savedInterests:", savedInterests)
     return NextResponse.json(
       { message: "Interests saved successfully" },
       { status: 200 },

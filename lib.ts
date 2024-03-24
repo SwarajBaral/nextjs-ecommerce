@@ -4,20 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "~/server/db";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
-import { User } from "@prisma/client";
-import nodemailer from "nodemailer";
 
 const secretKey = process.env.SESSION_KEY;
 const key = new TextEncoder().encode(secretKey);
-const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  auth: {
-    user: process.env.ETHEREAL_USER,
-    pass: process.env.ETHEREAL_PASS,
-  },
-});
-
 export async function encrypt(payload: any) {
   console.log(secretKey);
   return await new SignJWT(payload)
@@ -25,17 +14,6 @@ export async function encrypt(payload: any) {
     .setIssuedAt()
     .setExpirationTime("1 day from now")
     .sign(key);
-}
-
-export async function SendEmail(
-  userId: string,
-  type: "verification" | "reset",
-) {
-  transporter.sendMail({
-    subject: "Testing",
-    text: "Hellow world",
-    to: "baralswaraj40@fmail.com",
-  });
 }
 
 export async function passwordMatch(

@@ -13,11 +13,7 @@ const Login = async () => {
   if (session) {
     redirect("/onboarding/interests");
   }
-  return (
-    <>
-      <LoginClient />
-    </>
-  );
+  return <LoginClient />;
 };
 
 export default Login;
